@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+// Function to calculate average waiting time and average turnaround time
+void calculateAvgTime(int burstTime[], int n)
+{
+    int waitingTime[n], turnaroundTime[n], completionTime[n];
+    int totalWaitingTime = 0, totalTurnaroundTime = 0;
+    float avgWaitingTime, avgTurnaroundTime;
+
+    // Calculate completion time of each process
+    completionTime[0] = burstTime[0];
+    for(int i = 1; i < n; i++)
+    {
+        completionTime[i] = completionTime[i-1] + burstTime[i];
+    }
+
+    // Calculate turnaround time and waiting time of each process
+    for(int i = 0; i < n; i++)
+    {
+        turnaroundTime[i] = completionTime[i];
+        waitingTime[i] = turnaroundTime[i] - burstTime[i];
+
+        totalWaitingTime += waitingTime[i];
+        totalTurnaroundTime += turnaroundTime[i];
+    }
+
+    // Calculate average waiting time and average turnaround time
+    avgWaitingTime = (float) totalWaitingTime / n;
+    avgTurnaroundTime = (float) totalTurnaroundTime / n;
+
+    // Print results
+    printf("Process\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for(int i = 0; i < n; i++)
+    {
+        printf("P%d\t%d\t\t%d\t\t%d\n", i+1, burstTime[i], waitingTime[i], turnaroundTime[i]);
+    }
+    printf("\nAverage Waiting Time = %.2f\n", avgWaitingTime);
+    printf("Average Turnaround Time = %.2f\n", avgTurnaroundTime);
+}
+
+int main()
+{
+    int n = 4; // Number of processes
+    int burstTime[] = {6, 8, 7, 3}; // Burst time of each process
+
+    calculateAvgTime(burstTime, n);
+
+    return 0;
+}
